@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2024/12/22 22:54:29 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 14:05:40 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <mlx.h>
 #include <math.h>
 
-#define screenWidth 1800
-#define screenHeight 1000
+#define screenWidth 900
+#define screenHeight 600
 
 typedef struct	s_mlx
 {
@@ -89,6 +89,8 @@ typedef struct s_data
     int hit;
     int side;
     char compass;
+    void *mlx;
+    void *mlx_win;
     t_map *map;
     t_wall *wall;
     t_mlx *img;
@@ -107,9 +109,10 @@ void calc_length(t_data *data);
 void dda(t_data *data);
 void set_dda_vars(t_data *data);
 void wall_init(t_data *data);
-void ray_data_init(t_data *data, t_map *map, t_wall *wall, t_mlx *img);
+void ray_data_init(t_data *data, t_map *map, t_wall *wall);
 int draw_a_line(t_data *data, int x);
 void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 void data_init(t_data *data);
+void create_image(t_data *data);
 
 #endif

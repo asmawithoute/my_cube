@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2024/12/22 22:52:23 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 15:22:14 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,11 +60,11 @@ void data_init(t_data *data)
    
 // }
 
-void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color)
+void	my_mlx_pixel_put(t_mlx *img, int x, int y, int color)
 {
 	char	*dst;
 
-	dst = data->addr + (y * data->line_length + x * (data->bits_per_pixel / 8));
+	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
 }
 
@@ -82,15 +82,15 @@ int draw_a_line(t_data *data, int x)
 	while (y < data->wall->draw_end)
 	{
         if(data->side == 0)
-		    my_mlx_pixel_put(data->img, x, y, 0x00FF0000);
+		    my_mlx_pixel_put(data->img, x, y, 0x007b547d);
         else
-		    my_mlx_pixel_put(data->img, x, y, 0x0000FF00);
+		    my_mlx_pixel_put(data->img, x, y, 0x00912020);
 		y++;
 	}
     return 0;
 }
 
-void ray_data_init(t_data *data, t_map *map, t_wall *wall, t_mlx *img)
+void ray_data_init(t_data *data, t_map *map, t_wall *wall)
 {
     data->cameraX = 0;
     data->deltadisX = 0;
@@ -115,7 +115,6 @@ void ray_data_init(t_data *data, t_map *map, t_wall *wall, t_mlx *img)
     data->compass = 0;
     data->map = map;
     data->wall = wall;
-    data->img = img;
 }
 
 void wall_init(t_data *data)
@@ -127,31 +126,28 @@ void wall_init(t_data *data)
 
 void set_dda_vars(t_data *data)
 {
-        data->deltadisX = fabs(1/data->raydirX);
-        data->deltadisY = fabs(1/data->raydirY);
-
-
-
+    data->deltadisX = fabs(1/data->raydirX);
+    data->deltadisY = fabs(1/data->raydirY);
     if (data->raydirX < 0)
-      {
-        data->stepx = -1;
-        data->sidedistX = (data->posx - ((float)data->mapX)) * data->deltadisX;
-      }
-      else
-      {
+    {
+    	data->stepx = -1;
+    	data->sidedistX = (data->posx - ((float)data->mapX)) * data->deltadisX;
+    }
+    else
+    {
         data->stepx = 1;
         data->sidedistX = (((float)data->mapX) + 1.0 - data->posx) * data->deltadisX;
-      }
-      if (data->raydirY < 0)
-      {
+    }
+    if (data->raydirY < 0)
+    {
         data->stepy = -1;
         data->sidedistY = (data->posy - ((float)data->mapY)) * data->deltadisY;
-      }
-      else
-      {
-        data->stepy = 1;
+    }
+    else
+    {
+    	data->stepy = 1;
         data->sidedistY = (((float)data->mapY) + 1.0 - data->posy) * data->deltadisY;
-      }
+    }
 }
 
 void dda(t_data *data)
@@ -194,18 +190,21 @@ void calc_length(t_data *data)
     if (data->side == 0)
     {
         data->prepwalldist = data->sidedistX - data->deltadisX;
-        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistX, data->deltadisX);
+        // printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistX, data->deltadisX);
     }
     else
     {
         data->prepwalldist = data->sidedistY - data->deltadisY;
-        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
+        // printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
     }
-    data->wall->line_length = (screenHeight / (int)(data->prepwalldist));
+    // if ((int)data->prepwalldist != 0)
+    	data->wall->line_length = (2 * screenHeight / (int)(data->prepwalldist));
+	// else
+	// 	data->wall->line_length = screenHeight;
     data->wall->draw_start = ((-data->wall->line_length) / 2) + (screenHeight / 2);
     if(data->wall->draw_start < 0)
         data->wall->draw_start = 0;
-    //printf("line_length -> %d, perp %f\n", data->wall->line_length, data->prepwalldist);
+    // printf("line_length -> %d, perp %f\n", data->wall->line_length, data->prepwalldist);
     // exit(1);
     data->wall->draw_end = ((data->wall->line_length) / 2) + (screenHeight / 2);
     if (data->wall->draw_end > screenHeight)
@@ -233,11 +232,10 @@ void ray_init(t_data *data)
 
 void raycast(t_data *data)
 {
-    
     int x;
 
     x = 0;
-	
+	create_image(data);
     while(x < screenWidth)
     {
         wall_init(data);
@@ -245,7 +243,7 @@ void raycast(t_data *data)
         data->cameraX = 2 * x / (float)screenWidth - 1;
 		//printf("camerax is %f\n", data->cameraX);
         data->raydirX = data->dirx + (data->planeX * data->cameraX);
-        //printf("raydirx is %f\n", data->raydirX);
+        //printf("raydirx is %f\n", data->raydirX); 
         data->raydirY = data->diry + (data->planeY * data->cameraX);
         //printf("raydiry is %f\n", data->raydirY);
  

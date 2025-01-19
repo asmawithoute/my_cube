@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2024/12/22 22:52:40 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 15:15:35 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -297,26 +297,102 @@ void init_data(t_map *map)
         return;
 }
 
+void create_image(t_data *data)
+{
+	t_mlx *img;
+
+    img = malloc(sizeof(t_mlx));
+
+    img->img = mlx_new_image(data->mlx, screenWidth, screenHeight);
+	img->addr = mlx_get_data_addr(img->img, &img->bits_per_pixel, &img->line_length,
+								&img->endian);
+    data->img = img;
+}
+
+int left(t_data *data)
+{
+    printf("\n\n posx before %f\n", data->posx);
+    if(data->posx - 0.5 <= 0.0)
+    {
+        printf("rorororo\n");
+        return 1;
+    }
+    data->posx -= 0.5;
+    printf("\n\n posx after %f\n", data->posx);
+    return 0;
+                                                
+}
+
+int right(t_data *data)
+{
+    data->posx += 1;
+    if (data->posx >= data->map->map_j)
+        return 1;
+    return 0;
+}
+
+int front(t_data *data)
+{
+    data->posy -= 1;
+    return 0;
+//     raycast(data);
+//     mlx_clear_window(data->mlx, data->mlx_win);
+//     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);    
+}
+
+int back(t_data *data)
+{
+    data->posy += 1;
+    return 0;
+    // raycast(data);
+    // mlx_clear_window(data->mlx, data->mlx_win);
+    // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);    
+}
+
+int ray(int keycode ,t_data *data)
+{
+    // raycast(data);
+    // (int)data;
+    // printf("key is %d\n", keycode);
+    // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
+    // mlx_clear_window(data->mlx, data->mlx_win);
+    if (keycode == 119)
+		if(front(data) == 1)
+            return 0;
+	if (keycode == 115)
+		if (back(data) == 1)
+            return 0;
+	if (keycode == 97)
+		if (left(data) == 1)
+            return 0;
+	if (keycode == 100)
+		if (right(data) == 1)
+            return 0;
+	if (keycode == 65307)
+		exit(1);
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+	return 0;
+}
+
 void    create_window(t_data *data, t_map *map, t_wall *wall)
 {
-    void	*mlx;
-	void	*mlx_win;
-	t_mlx	img;
+    // void	*mlx;
+	// void	*mlx_win;
 	// t_map   map;
     // printf("map --> %s\n", map->map[0]);
-	mlx = mlx_init();
-	mlx_win = mlx_new_window(mlx, screenWidth, screenHeight, "Hello world!");
-	img.img = mlx_new_image(mlx, screenWidth, screenHeight);
-	img.addr = mlx_get_data_addr(img.img, &img.bits_per_pixel, &img.line_length,
-								&img.endian);
+	data->mlx = mlx_init();
+	data->mlx_win = mlx_new_window(data->mlx, screenWidth, screenHeight, "Hello world!");
 	// draw_a_line(&img);
-    ray_data_init(data, map, wall, &img);
+    ray_data_init(data, map, wall);
     player_init(data);
     data_init(data);
     raycast(data);
-    mlx_put_image_to_window(mlx, mlx_win, data->img->img, 0, 0);
-    // mlx_loop_hook(mlx, &draw_a_line, &img);
-	mlx_loop(mlx);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
+    mlx_key_hook(data->mlx_win, &ray, data);    
+	mlx_loop(data->mlx);
 }
 
 int main(int ac, char **av)
