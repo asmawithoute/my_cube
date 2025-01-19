@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/19 16:00:15 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 21:09:04 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,7 +132,7 @@ void set_dda_vars(t_data *data)
     {
     	data->stepx = -1;
     	data->sidedistX = (data->posx - ((float)data->mapX)) * data->deltadisX;
-        printf("posx is %f, mapX is %d, delta is %f\n", data->posx, data->mapX, data->deltadisX);
+        // printf("posx is %f, mapX is %d, delta is %f\n", data->posx, data->mapX, data->deltadisX);
     }
     else
     {
@@ -188,6 +188,7 @@ void dda(t_data *data)
 
 void calc_length(t_data *data)
 {
+
     if (data->side == 0)
     {
         data->prepwalldist = data->sidedistX - data->deltadisX;
@@ -204,17 +205,21 @@ void calc_length(t_data *data)
     //     printf("errooooooor\n");
     //     return ;    
     // }
-    data->wall->line_length = (screenHeight / (int)(data->prepwalldist));
+    if ((int)data->prepwalldist == 0)
+    {
+        printf("og prep is %f\n", data->prepwalldist);
+    }
+    data->wall->line_length = ((float)screenHeight / (data->prepwalldist));
 	// else
 	// 	data->wall->line_length = screenHeight;
-    data->wall->draw_start = ((-data->wall->line_length) / 2) + (screenHeight / 2);
+    data->wall->draw_start = ((-data->wall->line_length) / 2) + ((float)screenHeight / 2);
     if(data->wall->draw_start < 0)
         data->wall->draw_start = 0;
     // printf("line_length -> %d, perp %f\n", data->wall->line_length, data->prepwalldist);
     // exit(1);
-    data->wall->draw_end = ((data->wall->line_length) / 2) + (screenHeight / 2);
-    if (data->wall->draw_end > screenHeight)
-        data->wall->draw_end = screenHeight - 1;
+    data->wall->draw_end = ((data->wall->line_length) / 2) + ((float)screenHeight / 2);
+    if (data->wall->draw_end > (float)screenHeight)
+        data->wall->draw_end = (float)screenHeight - 1;
 }
 
 void ray_init(t_data *data)

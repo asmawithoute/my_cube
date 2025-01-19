@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/19 14:05:40 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 21:07:43 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -61,9 +61,9 @@ typedef struct s_map
 
 typedef struct s_wall
 {
-    int line_length;
-    int draw_start;
-    int draw_end;
+    float line_length;
+    float draw_start;
+    float draw_end;
 }              t_wall;
 
 typedef struct s_data
