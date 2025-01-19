@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/19 15:15:35 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 15:50:13 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -319,8 +319,10 @@ int left(t_data *data)
     }
     data->posx -= 0.5;
     printf("\n\n posx after %f\n", data->posx);
-    return 0;
-                                                
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+    return 0;                                           
 }
 
 int right(t_data *data)
@@ -328,12 +330,18 @@ int right(t_data *data)
     data->posx += 1;
     if (data->posx >= data->map->map_j)
         return 1;
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
     return 0;
 }
 
 int front(t_data *data)
 {
     data->posy -= 1;
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
     return 0;
 //     raycast(data);
 //     mlx_clear_window(data->mlx, data->mlx_win);
@@ -343,6 +351,9 @@ int front(t_data *data)
 int back(t_data *data)
 {
     data->posy += 1;
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
     return 0;
     // raycast(data);
     // mlx_clear_window(data->mlx, data->mlx_win);
@@ -370,9 +381,6 @@ int ray(int keycode ,t_data *data)
             return 0;
 	if (keycode == 65307)
 		exit(1);
-    raycast(data);
-    mlx_clear_window(data->mlx, data->mlx_win);
-    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
 	return 0;
 }
 

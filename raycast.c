@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/19 15:22:14 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/19 16:00:15 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -132,6 +132,7 @@ void set_dda_vars(t_data *data)
     {
     	data->stepx = -1;
     	data->sidedistX = (data->posx - ((float)data->mapX)) * data->deltadisX;
+        printf("posx is %f, mapX is %d, delta is %f\n", data->posx, data->mapX, data->deltadisX);
     }
     else
     {
@@ -198,7 +199,12 @@ void calc_length(t_data *data)
         // printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
     }
     // if ((int)data->prepwalldist != 0)
-    	data->wall->line_length = (2 * screenHeight / (int)(data->prepwalldist));
+    // if ((int)data->prepwalldist == 0)
+    // {
+    //     printf("errooooooor\n");
+    //     return ;    
+    // }
+    data->wall->line_length = (screenHeight / (int)(data->prepwalldist));
 	// else
 	// 	data->wall->line_length = screenHeight;
     data->wall->draw_start = ((-data->wall->line_length) / 2) + (screenHeight / 2);
