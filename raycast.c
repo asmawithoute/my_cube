@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/19 21:09:04 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:45:07 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,9 +60,11 @@ void data_init(t_data *data)
    
 // }
 
-void	my_mlx_pixel_put(t_mlx *img, int x, int y, int color)
+void	 my_mlx_pixel_put(t_mlx *img, int x, int y, int color)
 {
 	char	*dst;
+
+    // dst = malloc(sizeof(img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8))));
 
 	dst = img->addr + (y * img->line_length + x * (img->bits_per_pixel / 8));
 	*(unsigned int*)dst = color;
@@ -113,6 +115,8 @@ void ray_data_init(t_data *data, t_map *map, t_wall *wall)
     data->stepx = 0;
     data->stepy = 0;
     data->compass = 0;
+    data->player_i = 0;
+    data->player_j = 0;
     data->map = map;
     data->wall = wall;
 }
@@ -188,28 +192,29 @@ void dda(t_data *data)
 
 void calc_length(t_data *data)
 {
-
     if (data->side == 0)
     {
         data->prepwalldist = data->sidedistX - data->deltadisX;
-        // printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistX, data->deltadisX);
+        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistX, data->deltadisX);
     }
     else
     {
         data->prepwalldist = data->sidedistY - data->deltadisY;
-        // printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
+        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
     }
-    // if ((int)data->prepwalldist != 0)
-    // if ((int)data->prepwalldist == 0)
-    // {
-    //     printf("errooooooor\n");
-    //     return ;    
+    //if ((int)data->prepwalldist != 0)
+    //if ((int)data->prepwalldist == 0)
+    //{
+    //    printf("errooooooor\n");
+    //    return;    
     // }
-    if ((int)data->prepwalldist == 0)
+    if (data->prepwalldist == 0)
     {
-        printf("og prep is %f\n", data->prepwalldist);
+        // printf("og prep is %f\n", data->prepwalldist);
+        data->wall->line_length = ((float)screenHeight / 0.1);
     }
-    data->wall->line_length = ((float)screenHeight / (data->prepwalldist));
+    else
+        data->wall->line_length = ((float)screenHeight / (data->prepwalldist));
 	// else
 	// 	data->wall->line_length = screenHeight;
     data->wall->draw_start = ((-data->wall->line_length) / 2) + ((float)screenHeight / 2);
@@ -238,7 +243,6 @@ void ray_init(t_data *data)
     data->stepy = 0;
     data->mapX = (int)(data->posx);
     data->mapY = (int)data->posy;
-
 }
 
 void raycast(t_data *data)
@@ -268,6 +272,7 @@ void raycast(t_data *data)
         data->hit = 0;
         x++;
     }
+    draw_minimap(data, data->minimap);
     
 }
 
@@ -286,6 +291,8 @@ void player_init(t_data *data)
                 || data->map->map[i][j] == 'S'|| data->map->map[i][j] == 'W')
             {
                 data->compass = data->map->map[i][j];
+                data->player_i = i;
+                data->player_j = j;
                 data->posx = ((float)j) + 0.5;
 				//printf("posx is %f\n", data->posx);
                 // //printf("mapx is %d\n", data->mapX);

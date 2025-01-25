@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/19 21:25:12 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:50:40 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -312,7 +312,7 @@ void create_image(t_data *data)
 int left(t_data *data)
 {
     printf("\n\n posx before %f\n", data->posx);
-    if(data->posx - 0.5 <= 0.0)
+    if(data->posx - 0.5 <= 0)
     {
         printf("rorororo\n");
         return 1;
@@ -322,23 +322,38 @@ int left(t_data *data)
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
-    return 0;                                           
+    return 0;
 }
 
 int right(t_data *data)
 {
-    data->posx += 1;
-    if (data->posx >= data->map->map_j)
+    if (data->posx + 0.5 >= (float)data->map->map_j)
         return 1;
+    data->posx += 0.5;
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
-    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     return 0;
+}
+
+void move_mini_player_front(t_data *data)
+{
+    if (data->compass == 'N')
+    {
+        data->map->map[data->player_i - 1][data->player_j] = 'N';
+        data->map->map[data->player_i][data->player_j] = '0';
+        data->player_i--;
+    }
 }
 
 int front(t_data *data)
 {
-    data->posy -= 1;
+    // data->posx += data->dirx;
+    // data->posy += data->diry;
+    if (data->posy - 0.5 <= 0)
+        return 1;
+    data->posy -= 0.5;
+    move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -350,7 +365,11 @@ int front(t_data *data)
 
 int back(t_data *data)
 {
-    data->posy += 1;
+    // data->posx -= data->dirx;
+    // data->posy -= data->diry;
+    if (data->posy + 0.5 >= (float)data->map->map_i)
+        return 1;
+    data->posy += 0.5;
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -396,16 +415,17 @@ void    create_window(t_data *data, t_map *map, t_wall *wall)
     ray_data_init(data, map, wall);
     player_init(data);
     data_init(data);
+    mini_map(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
-    mlx_key_hook(data->mlx_win, &ray, data);    
+    mlx_key_hook(data->mlx_win, &ray, data);
 	mlx_loop(data->mlx);
 }
 
 int main(int ac, char **av)
 {
-    t_map map;
+    t_map *map;
     t_wall wall;
     t_data data;
  
@@ -416,11 +436,12 @@ int main(int ac, char **av)
         printf("Error\nnumber of args\n");
 	    exit(0);
     }
+    map = malloc(sizeof(t_map));
     check_file(av[1]);
-    init_data(&map);
-    get_map(av[1], &map);
-    check_map(&map);
-    create_window(&data, &map, &wall);
-    free_all(&map);
+    init_data(map);
+    get_map(av[1], map);
+    check_map(map);
+    create_window(&data, map, &wall);
+    free_all(map);
     return(0);
 }

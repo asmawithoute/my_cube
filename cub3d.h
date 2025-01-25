@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/19 21:07:43 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/25 16:39:02 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,8 +22,8 @@
 # include <mlx.h>
 #include <math.h>
 
-#define screenWidth 900
-#define screenHeight 600
+#define screenWidth 955
+#define screenHeight 655
 
 typedef struct	s_mlx
 {
@@ -56,7 +56,6 @@ typedef struct s_map
     char **map;
     
     t_count *count;
-    
 } t_map;
 
 typedef struct s_wall
@@ -65,6 +64,15 @@ typedef struct s_wall
     float draw_start;
     float draw_end;
 }              t_wall;
+
+typedef struct s_mini_map
+{
+    int height;
+    int width;
+    int start;
+    int square_width;
+    int square_height;
+}              t_mini_map;
 
 typedef struct s_data
 {
@@ -91,10 +99,13 @@ typedef struct s_data
     char compass;
     void *mlx;
     void *mlx_win;
+    int player_i;
+    int player_j;
     t_map *map;
     t_wall *wall;
     t_mlx *img;
-    
+    t_mini_map *minimap;
+
 } t_data;
 
 
@@ -114,5 +125,8 @@ int draw_a_line(t_data *data, int x);
 void	my_mlx_pixel_put(t_mlx *data, int x, int y, int color);
 void data_init(t_data *data);
 void create_image(t_data *data);
+int draw_minimap(t_data *data, t_mini_map *map);
+void mini_map(t_data *data);
+
 
 #endif
