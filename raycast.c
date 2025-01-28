@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/25 16:45:07 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:14:04 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -245,6 +245,36 @@ void ray_init(t_data *data)
     data->mapY = (int)data->posy;
 }
 
+int rgb_c(t_data *data)
+{
+    // printf("r = %d | g = %d | b = %d  \n", data->map->c_color[0], data->map->c_color[1] , data->map->c_color[2]);
+    return((data->map->c_color[0] << 16) | (data->map->c_color[1] << 8) | data->map->c_color[2]);
+}
+
+int rgb_f(t_data *data)
+{
+    // printf("r = %d | g = %d | b = %d  \n", data->map->c_color[0], data->map->c_color[1] , data->map->c_color[2]);
+    return((data->map->f_color[0] << 16) | (data->map->f_color[1] << 8) | data->map->f_color[2]);
+}
+
+void draw_fc(t_data *data, int x)
+{
+    int i = 0;
+    
+    while(i < data->wall->draw_start)
+    {
+        // printf("  --> d == %d \n", i * screenWidth + x);
+        my_mlx_pixel_put(data->img, x, i, rgb_c(data));
+        i++;
+    }
+    i = data->wall->draw_end;
+    while(i < screenHeight)
+    {
+        my_mlx_pixel_put(data->img, x, i, rgb_f(data));
+        i++;
+    }
+}
+
 void raycast(t_data *data)
 {
     int x;
@@ -268,6 +298,8 @@ void raycast(t_data *data)
         {
             calc_length(data);
             draw_a_line(data, x);
+            draw_fc(data, x);
+
         }
         data->hit = 0;
         x++;
@@ -295,11 +327,7 @@ void player_init(t_data *data)
                 data->player_j = j;
                 data->posx = ((float)j) + 0.5;
 				//printf("posx is %f\n", data->posx);
-                // //printf("mapx is %d\n", data->mapX);
                 data->posy = ((float)i) + 0.5;
-				//printf("posy is %f\n", data->posy);
-
-                // //printf("mapy is %d\n", data->mapY);
 
             }
             j++;

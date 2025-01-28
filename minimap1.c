@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:50:58 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/25 16:44:57 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:40:24 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,20 +17,22 @@ void draw_square(t_data *data, int mapx, int mapy, int x, int y)
     int S_x = x;
     int S_y = y;
     int color;
-
+    // printf("mapx %d mapy %d \n", mapx, mapy);
     if (data->map->map[mapx][mapy] == '1')
         color = 0x004287f5;
     else if (data->map->map[mapx][mapy] == 'E' || data->map->map[mapx][mapy] == 'W' || data->map->map[mapx][mapy] == 'N' || data->map->map[mapx][mapy] == 'S')
         color = 0x00361227;
-    else if (data->map->map[mapx][mapy] == '0')
+    else if (data->map->map[mapx][mapy] == '0' )
         color = 0x007b547d;
+    else if (data->map->map[mapx][mapy] == ' ')
+        color = rgb_c(data);
     // printf("mapx %d mapy %d char %c X %d Y %d color %d\n", mapx, mapy, data->map->map[mapx][mapy], *x, *y, color);
     while (y < (S_y + data->minimap->square_height))
     {
         x = S_x;
         while (x < (S_x + data->minimap->square_width))
         {
-            printf("*x %d, *y %d\n", x, y);
+            // printf("*x %d, *y %d\n", x, y);
             my_mlx_pixel_put(data->img, x, y, color);
             x++;
         }
@@ -45,37 +47,24 @@ int draw_minimap(t_data *data, t_mini_map *map)
 	int y;
     int mapx;
     int mapy;
-    // int i;
-    // int j;
 
     x = map->start;
 	y = 20;
-    // j = data->map->map_j;
-    // i = data->map->map_i;
     mapx = 0;
     mapy = 0;
-    printf("rororororor w %d, h %d, x %d, \n", map->width, map->height, map->start);
-	while (mapx < data->map->map_i )
+    //printf("rororororor w %d, h %d, x %d, \n", map->width, map->height, map->start);
+	while (mapx < data->map->map_i)
 	{
-        while (mapy < data->map->map_j )
+        while (mapy < data->map->map_j)
         {
             draw_square(data, mapx, mapy, x ,y);
             x = x + map->square_width;
             mapy++;
-            // my_mlx_pixel_put(data->img, x, y, 0x007b547d);
-            // x++;
         }
-        // y++;
         y = y + map->square_height;
         x = map->start;
         mapy = 0;
         mapx++;
-        // x = map->start;
-        // if(data->side == 0)
-		//     my_mlx_pixel_put(data->img, x, y, 0x007b547d);
-        // else
-		//     my_mlx_pixel_put(data->img, x, y, 0x00912020);
-		// y++;
 	}
     return 0;
 }

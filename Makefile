@@ -1,7 +1,7 @@
 NAME = cub3D
 CC = cc
 CFLAGS = -g3 -Wall -Werror -Wextra -Imlx_linux #-fsanitize=address
-src = minimap1.c raycast.c main.c utils.c free.c ./get_next_line/get_next_line.c ./get_next_line/get_next_line_utils.c
+src = ft_split.c minimap1.c raycast.c main.c utils.c free.c ./get_next_line/get_next_line.c ./get_next_line/get_next_line_utils.c
 
 OBJ = $(src:.c=.o)
 

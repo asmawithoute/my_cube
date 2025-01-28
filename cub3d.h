@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/25 16:39:02 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/28 18:40:40 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,9 @@
 
 #define screenWidth 955
 #define screenHeight 655
+
+typedef struct s_map t_map;
+typedef struct s_data t_data;
 
 typedef struct	s_mlx
 {
@@ -54,7 +57,22 @@ typedef struct s_map
     int map_i;
     int map_j;
     char **map;
-    
+    char **map_copy;
+     int x_p;
+    int y_p;
+    char *file_name;
+    char *no_texture;
+    char *so_texture;
+    char *we_texture;
+    char *ea_texture;
+    int f_color[3];
+    int c_color[3];
+    int countlines_map;
+    int s;
+    int w;
+    int e;
+    int n;
+    t_data *data;
     t_count *count;
 } t_map;
 
@@ -127,6 +145,33 @@ void data_init(t_data *data);
 void create_image(t_data *data);
 int draw_minimap(t_data *data, t_mini_map *map);
 void mini_map(t_data *data);
+void check_player(t_map *map, int j, int i);
+
+
+int check_path(const char *path);
+void check_map(t_map *map);
+void check_valid(char *line, char **path);
+void free_text(char **texture);
+char	**ft_split(char const *s, char c);
+void ini(t_map *map);
+int count_part(char **value);
+void check_first_last(t_map *map, int *i);
+int skp_spaces(char *line);
+void check_map_borders(t_map *map, int *i);
+void check_characters(t_map *map, int *i);
+void ft_error(t_map *map);
+void file_err(int i);
+void check_spaces(t_map *map);
+void free_map2(t_map *map);
+char	*ft_strtrim(char const *s1, char const *set);
+int	ft_atoi(const char *str);
+int check_digit(char *value);
+void	*ft_memset(void *str, int c, size_t n);
+int count_comma(char *value);
+void parse_map(t_map *map, int i);
+int rgb_c(t_data *data);
+
+void draw_fc(t_data *data, int x);
 
 
 #endif
