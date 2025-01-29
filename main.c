@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/28 15:31:06 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/01/29 09:50:42 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -514,7 +514,7 @@ void check_fc(t_map *map, int i)
 
 int get_longest_line(char **line, int i)
 {
-    printf("heeeeeeeeere\n");
+    // printf("heeeeeeeeere\n");
 	// int i;/
 	int j;
 	int longest;
@@ -869,27 +869,29 @@ void create_image(t_data *data)
     data->img = img;
 }
 
-int left(t_data *data)
+int right(t_data *data)
 {
-    printf("\n\n posx before %f\n", data->posx);
-    if(data->posx - 0.5 <= 0)
-    {
-        printf("rorororo\n");
-        return 1;
-    }
-    data->posx -= 0.5;
-    printf("\n\n posx after %f\n", data->posx);
+    double oldDirX = data->dirx;
+    data->dirx = data->dirx * cos(0.1) - data->diry * sin(0.1);
+      data->diry = oldDirX * sin(0.1) + data->diry * cos(0.1);
+      double oldPlaneX = data->planeX;
+      data->planeX = data->planeX * cos(0.1) - data->planeY * sin(0.1);
+      data->planeY = oldPlaneX * sin(0.1) + data->planeY * cos(0.1);
+    // printf("\n\n posx after %f\n", data->posx);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     return 0;
 }
 
-int right(t_data *data)
+int left(t_data *data)
 {
-    if (data->posx + 0.5 >= (float)data->map->map_j)
-        return 1;
-    data->posx += 0.5;
+   double oldDirX = data->dirx;
+    data->dirx = data->dirx * cos(-0.1) - data->diry * sin(-0.1);
+      data->diry = oldDirX * sin(-0.1) + data->diry * cos(-0.1);
+      double oldPlaneX = data->planeX;
+      data->planeX = data->planeX * cos(-0.1) - data->planeY * sin(-0.1);
+      data->planeY = oldPlaneX * sin(-0.1) + data->planeY * cos(-0.1);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
@@ -900,6 +902,8 @@ void move_mini_player_front(t_data *data)
 {
     if (data->compass == 'N')
     {
+        if (data->map->map[data->player_i - 1][data->player_j] == '1')
+            return;
         data->map->map[data->player_i - 1][data->player_j] = 'N';
         data->map->map[data->player_i][data->player_j] = '0';
         data->player_i--;
@@ -930,6 +934,7 @@ int back(t_data *data)
     // if (data->posy + 0.5 >= (float)data->map->map_i)
     //     return 1;
     // data->posy += 0.5;
+    // move_mini_player_back(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -943,7 +948,7 @@ int ray(int keycode ,t_data *data)
 {
     // raycast(data);
     // (int)data;
-    // printf("key is %d\n", keycode);
+    printf("key is %d\n", keycode);
     // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     // mlx_clear_window(data->mlx, data->mlx_win);
     if (keycode == 119)
@@ -952,10 +957,10 @@ int ray(int keycode ,t_data *data)
 	if (keycode == 115)
 		if (back(data) == 1)
             return 0;
-	if (keycode == 97)
+	if (keycode == 65361)
 		if (left(data) == 1)
             return 0;
-	if (keycode == 100)
+	if (keycode == 65363)
 		if (right(data) == 1)
             return 0;
 	if (keycode == 65307)
