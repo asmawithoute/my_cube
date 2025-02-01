@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/01 18:26:38 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 19:02:51 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,6 +24,7 @@
 
 #define screenWidth 955
 #define screenHeight 655
+# define TILE_SIZE 64
 
 typedef struct s_map t_map;
 typedef struct s_data t_data;
@@ -35,6 +36,28 @@ typedef struct	s_mlx
 	int		bits_per_pixel;
 	int		line_length;
 	int		endian;
+     int     win_height;
+    int     win_width;
+    void	*img_e;
+    void	*img_n;
+    void	*img_s;
+    void	*img_w;
+    char    *add_pxl_n;
+    char    *add_pxl_s;
+    char    *add_pxl_e;
+    char    *add_pxl_w;
+    int		endian_e;
+    int		endian_s;
+    int		endian_n;
+    int		endian_w;
+    int		bits_per_pixel_e;
+	int		line_length_e;
+    int		bits_per_pixel_n;
+	int		line_length_n;
+    int		bits_per_pixel_s;
+	int		line_length_s;
+    int		bits_per_pixel_w;
+	int		line_length_w;
 
 }				t_mlx;
 
@@ -171,7 +194,7 @@ int count_comma(char *value);
 void parse_map(t_map *map, int i);
 int rgb_c(t_data *data);
 
-void draw_fc(t_data *data, int x);
+void draw_fc(t_data *data, int x, double *y);
 
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/01 18:43:30 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 20:05:59 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -869,7 +869,7 @@ void create_image(t_data *data)
     data->img = img;
 }
 
-int right(t_data *data) //used rotation matrices 
+int povright(t_data *data) //used rotation matrices 
 {
     float oldDirX;
     float oldPlaneX;
@@ -886,7 +886,7 @@ int right(t_data *data) //used rotation matrices
     return 0;
 }
 
-int left(t_data *data)
+int povleft(t_data *data)
 {
     float oldDirX;
     float oldPlaneX;
@@ -913,6 +913,42 @@ void move_mini_player_front(t_data *data)
         data->map->map[data->player_i][data->player_j] = '0';
         data->player_i--;
     }
+}
+
+int left(t_data *data)
+{
+    float newposx;
+    float newposy;
+
+    newposx = data->posx - data->diry * 0.3;
+    newposy = data->posy - data->dirx * 0.3;
+    if (data->map->map[(int)newposy][(int)newposx] == '1')
+        return 1;
+    data->posx = newposx;
+    data->posy = newposy;
+    move_mini_player_front(data);
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+    return 0;
+}
+
+int right(t_data *data)
+{
+    float newposx;
+    float newposy;
+
+    newposx = data->posx + data->diry * 0.3;
+    newposy = data->posy + data->dirx * 0.3;
+    if (data->map->map[(int)newposy][(int)newposx] == '1')
+        return 1;
+    data->posx = newposx;
+    data->posy = newposy;
+    move_mini_player_front(data);
+    raycast(data);
+    mlx_clear_window(data->mlx, data->mlx_win);
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+    return 0;
 }
 
 int front(t_data *data)
@@ -957,6 +993,12 @@ int ray(int keycode ,t_data *data)
     // printf("key is %d\n", keycode);
     // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     // mlx_clear_window(data->mlx, data->mlx_win);
+	if (keycode == 97)
+		if(right(data) == 1)
+            return 0;
+	if (keycode == 100)
+		if(left(data) == 1)
+            return 0;
     if (keycode == 119)
 		if(front(data) == 1)
             return 0;
@@ -964,14 +1006,20 @@ int ray(int keycode ,t_data *data)
 		if (back(data) == 1)
             return 0;
 	if (keycode == 65361)
-		if (left(data) == 1)
+		if (povleft(data) == 1)
             return 0;
 	if (keycode == 65363)
-		if (right(data) == 1)
+		if (povright(data) == 1)
             return 0;
 	if (keycode == 65307)
 		exit(1);
 	return 0;
+}
+
+int delete_window(t_data *data)
+{
+    mlx_destroy_window(data->mlx, data->mlx_win);
+	exit(1);
 }
 
 void    create_window(t_data *data, t_map *map, t_wall *wall)
@@ -991,6 +1039,7 @@ void    create_window(t_data *data, t_map *map, t_wall *wall)
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     mlx_hook(data->mlx_win, 2, 1L<<0, &ray, data);
+	mlx_hook(data->mlx_win, 17, 0, (void *)delete_window, data);
 	mlx_loop(data->mlx);
 }
 
