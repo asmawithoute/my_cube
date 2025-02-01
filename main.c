@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/01/29 09:50:42 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 18:43:30 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -869,15 +869,17 @@ void create_image(t_data *data)
     data->img = img;
 }
 
-int right(t_data *data)
+int right(t_data *data) //used rotation matrices 
 {
-    double oldDirX = data->dirx;
+    float oldDirX;
+    float oldPlaneX;
+
+    oldDirX = data->dirx;
+    oldPlaneX = data->planeX;
     data->dirx = data->dirx * cos(0.1) - data->diry * sin(0.1);
-      data->diry = oldDirX * sin(0.1) + data->diry * cos(0.1);
-      double oldPlaneX = data->planeX;
-      data->planeX = data->planeX * cos(0.1) - data->planeY * sin(0.1);
-      data->planeY = oldPlaneX * sin(0.1) + data->planeY * cos(0.1);
-    // printf("\n\n posx after %f\n", data->posx);
+    data->diry = oldDirX * sin(0.1) + data->diry * cos(0.1);
+    data->planeX = data->planeX * cos(0.1) - data->planeY * sin(0.1);
+    data->planeY = oldPlaneX * sin(0.1) + data->planeY * cos(0.1);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
@@ -886,12 +888,15 @@ int right(t_data *data)
 
 int left(t_data *data)
 {
-   double oldDirX = data->dirx;
+    float oldDirX;
+    float oldPlaneX;
+
+    oldDirX = data->dirx;
+    oldPlaneX = data->planeX;
     data->dirx = data->dirx * cos(-0.1) - data->diry * sin(-0.1);
-      data->diry = oldDirX * sin(-0.1) + data->diry * cos(-0.1);
-      double oldPlaneX = data->planeX;
-      data->planeX = data->planeX * cos(-0.1) - data->planeY * sin(-0.1);
-      data->planeY = oldPlaneX * sin(-0.1) + data->planeY * cos(-0.1);
+    data->diry = oldDirX * sin(-0.1) + data->diry * cos(-0.1);
+    data->planeX = data->planeX * cos(-0.1) - data->planeY * sin(-0.1);
+    data->planeY = oldPlaneX * sin(-0.1) + data->planeY * cos(-0.1);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
@@ -912,43 +917,44 @@ void move_mini_player_front(t_data *data)
 
 int front(t_data *data)
 {
-    data->posx += data->dirx;
-    data->posy += data->diry;
-    // if (data->posy - 0.5 <= 0)
-    //     return 1;
-    // data->posy -= 0.5;
+    float newposx;
+    float newposy;
+
+    newposx = data->posx + data->dirx * 0.3;
+    newposy = data->posy + data->diry * 0.3;
+    if (data->map->map[(int)newposy][(int)newposx] == '1')
+        return 1;
+    data->posx = newposx;
+    data->posy = newposy;
     move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
     return 0;
-//     raycast(data);
-//     mlx_clear_window(data->mlx, data->mlx_win);
-//     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);    
 }
 
 int back(t_data *data)
 {
-    data->posx -= data->dirx;
-    data->posy -= data->diry;
-    // if (data->posy + 0.5 >= (float)data->map->map_i)
-    //     return 1;
-    // data->posy += 0.5;
-    // move_mini_player_back(data);
+    float newposx;
+    float newposy;
+
+    newposx = data->posx - data->dirx * 0.3;
+    newposy = data->posy - data->diry * 0.3;
+    if (data->map->map[(int)newposy][(int)newposx] == '1')
+        return 1;
+    data->posx = newposx;
+    data->posy = newposy;
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
-    return 0;
-    // raycast(data);
-    // mlx_clear_window(data->mlx, data->mlx_win);
-    // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);    
+    return 0;   
 }
 
 int ray(int keycode ,t_data *data)
 {
     // raycast(data);
     // (int)data;
-    printf("key is %d\n", keycode);
+    // printf("key is %d\n", keycode);
     // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     // mlx_clear_window(data->mlx, data->mlx_win);
     if (keycode == 119)
@@ -984,7 +990,7 @@ void    create_window(t_data *data, t_map *map, t_wall *wall)
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
-    mlx_key_hook(data->mlx_win, &ray, data);
+    mlx_hook(data->mlx_win, 2, 1L<<0, &ray, data);
 	mlx_loop(data->mlx);
 }
 
@@ -1001,6 +1007,7 @@ int main(int ac, char **av)
         printf("Error\nnumber of args\n");
 	    exit(0);
     }
+    
     map = malloc(sizeof(t_map));
     data = malloc(sizeof(t_data));
     check_file(av[1]);
