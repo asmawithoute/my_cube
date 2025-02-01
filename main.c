@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/01 20:05:59 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 22:06:02 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -524,7 +524,7 @@ int get_longest_line(char **line, int i)
 	longest = 0;
 	while(line[i])
 	{
-		while(line[i][j])
+		while(line[i][j] != '\0' && line[i][j] != '\n')
 		{
 			j++;
 		}
@@ -546,7 +546,7 @@ void parse_map(t_map *map, int i)
     // printf("here %s\n", data->map->map[0]);
 	int l = get_longest_line(map->line, i);
     // int l = map->countlines_map;
-    // printf("after %i\n", i);
+    // printf("after %d\n", l);
     // exit(0);
     map->map_j = l;
 	while (map->line[j])
@@ -567,12 +567,18 @@ void parse_map(t_map *map, int i)
 	l = 0;
 	while (map->line[i])
 	{
-		while (map->line[i][j])
+		while (map->line[i][j] != '\0' && map->line[i][j] != '\n')
 		{
 			map->map[l][j] = map->line[i][j];
 			j++;
 		}
+		while (j < map->map_j)
+		{
+			map->map[l][j] = ' ';
+			j++;
+		}
 		map->map[l][j] = '\0';
+		// printf("j %d\n", j);
 		// printf("l is %d map is %s\n",l,  map->map[l]);
 		i++;
 		l++;

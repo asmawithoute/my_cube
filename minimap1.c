@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:50:58 by akoraich          #+#    #+#             */
-/*   Updated: 2025/01/28 18:40:24 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 22:06:16 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,7 +22,7 @@ void draw_square(t_data *data, int mapx, int mapy, int x, int y)
         color = 0x004287f5;
     else if (data->map->map[mapx][mapy] == 'E' || data->map->map[mapx][mapy] == 'W' || data->map->map[mapx][mapy] == 'N' || data->map->map[mapx][mapy] == 'S')
         color = 0x00361227;
-    else if (data->map->map[mapx][mapy] == '0' )
+    else if (data->map->map[mapx][mapy] == '0')
         color = 0x007b547d;
     else if (data->map->map[mapx][mapy] == ' ')
         color = rgb_c(data);
@@ -57,6 +57,7 @@ int draw_minimap(t_data *data, t_mini_map *map)
 	{
         while (mapy < data->map->map_j)
         {
+            // printf("mapx %d mapy %d mapj %d\n", mapx, mapy, data->map->map_j);
             draw_square(data, mapx, mapy, x ,y);
             x = x + map->square_width;
             mapy++;
@@ -77,14 +78,14 @@ void mini_map(t_data *data)
 
     // minimap->width = data->map->map_j * 3 ;
     minimap->width = screenWidth / 9 ;
-    printf("mini width %d \n", minimap->width);
+    // printf("mini width %d \n", minimap->width);
     minimap->height = screenHeight / 9;
-    printf("mini height %d \n", minimap->height);
+    // printf("mini height %d \n", minimap->height);
     minimap->start = 20;
     minimap->square_width = minimap->width / data->map->map_j;
-    printf("mini sq width %d map_j %d \n", minimap->square_width, data->map->map_j);
+    // printf("mini sq width %d map_j %d \n", minimap->square_width, data->map->map_j);
     minimap->square_height = minimap->height / data->map->map_i;
-    printf("mini sq height %d map_i %d \n", minimap->square_height, data->map->map_i);
+    // printf("mini sq height %d map_i %d \n", minimap->square_height, data->map->map_i);
 
     // minimap->square_width = 30;
     // minimap->square_height = 30;

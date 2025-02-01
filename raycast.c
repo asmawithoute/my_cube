@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/02/01 19:09:48 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/01 22:03:19 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -505,7 +505,7 @@ void player_init(t_data *data)
     j = 0;
     while (data->map->map[i])
     {
-        while(data->map->map[i][j])
+        while(data->map->map[i][j] != '\0')
         {
             if (data->map->map[i][j] == 'N' || data->map->map[i][j] == 'E'
                 || data->map->map[i][j] == 'S'|| data->map->map[i][j] == 'W')
