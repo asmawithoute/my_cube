@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/01 22:06:02 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/08 18:50:57 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -144,8 +144,10 @@ int check_path(const char *path)
 {
     int fd;
 
+    // printf("path : %s\n", path);
     fd = open(path, O_RDONLY);
     if(fd < 0)
+
     {
         printf("Error ! invalid texture path : %s \n", path);
         return(1);
@@ -258,7 +260,7 @@ void check_valid(char *line, char **path)
     free_text(value);
     if(check_path(*path) != 0)
     {
-       free_text(path);
+    //    free_text(path);
         exit(0);
     }
 }
@@ -458,6 +460,24 @@ void check_multiple(t_map *map)
     }
 }
 
+// void free_map(t_map *map)
+// {
+//     int i;
+
+//     i = 0;
+//     while (i < map->countlines)
+//     {
+//         free(map->line[i]);
+//         i++;
+//     }
+//     free(map->line);
+// }
+
+void freee(t_map *map)
+{
+    free_map(map);
+    free(map->count);
+}
 
 void check_textures(t_map *map, int i)
 {
@@ -482,7 +502,7 @@ void check_textures(t_map *map, int i)
     if(count != 4)
     {
         printf(" ERROR texture \n");
-        free_all(map);
+        freee(map);
         exit(0);
     }
 }
@@ -507,84 +527,171 @@ void check_fc(t_map *map, int i)
     if(count != 2)
     {
         printf(" ERROR floor and ceiling \n");
-        free_all(map);
+        freee(map);
         exit(0); 
     }    
 }
 
+void ft_trim(char *str)
+{
+    int len = ft_strlen(str) - 1;
+    while(len >= 0 && (str[len] == ' ' || str[len] == '\t' || str[len] == '\n' ))
+    {
+        str[len] = '\0';
+        len--;
+    }
+}
 int get_longest_line(char **line, int i)
 {
     // printf("heeeeeeeeere\n");
-	// int i;/
-	int j;
-	int longest;
+    // int i;/
+    int j;
+    int longest;
 
-	// i = 0;
-	j = 0;
-	longest = 0;
-	while(line[i])
-	{
-		while(line[i][j] != '\0' && line[i][j] != '\n')
-		{
-			j++;
-		}
-		if(j > longest)
-			longest = j;
-		j = 0;
-		i++;
-	}
-	return (longest);
+    // i = 0;
+    j = 0;
+    longest = 0;
+    while(line[i])
+    {
+        ft_trim(line[i]);
+        while(line[i][j] != '\0' && line[i][j] != '\n')
+        {
+            j++;
+        }
+        if(j > longest)
+            longest = j;
+        j = 0;
+        i++;
+    }
+    return (longest);
 }
+
+// int get_longest_line(char **line, int i)
+// {
+//     // printf("heeeeeeeeere\n");
+// 	// int i;/
+// 	int j;
+// 	int longest;
+
+// 	// i = 0;
+// 	j = 0;
+// 	longest = 0;
+// 	while(line[i])
+// 	{
+// 		while(line[i][j] != '\0' && line[i][j] != '\n')
+// 		{
+// 			j++;
+// 		}
+// 		if(j > longest)
+// 			longest = j;
+// 		j = 0;
+// 		i++;
+// 	}
+// 	return (longest);
+// }
+
+// void parse_map(t_map *map, int i)
+// {
+// 	int j;
+// 	int size;
+
+// 	j = i;
+// 	size = 0;
+//     // printf("here %s\n", data->map->map[0]);
+// 	int l = get_longest_line(map->line, i);
+//     // int l = map->countlines_map;
+//     // printf("after %d\n", l);
+//     // exit(0);
+//     map->map_j = l;
+// 	while (map->line[j])
+// 	{
+// 		size++;
+// 		j++;
+// 	}
+//     map->map_i = size;
+// 	// printf("size is is %d\n", size);
+// 	map->map = malloc(sizeof(char *) * (size + 1));
+// 	j = 0;
+// 	while (j < size)
+// 	{
+// 		map->map[j] = malloc(sizeof(char) * (l + 1));
+// 		j++;
+// 	}
+// 	j = 0;
+// 	l = 0;
+// 	while (map->line[i])
+// 	{
+// 		while (map->line[i][j] != '\0' && map->line[i][j] != '\n')
+// 		{
+// 			map->map[l][j] = map->line[i][j];
+// 			j++;
+// 		}
+// 		while (j < map->map_j)
+// 		{
+// 			map->map[l][j] = ' ';
+// 			j++;
+// 		}
+// 		map->map[l][j] = '\0';
+// 		// printf("j %d\n", j);
+// 		// printf("l is %d map is %s\n",l,  map->map[l]);
+// 		i++;
+// 		l++;
+// 		j = 0;
+// 	}
+// 	map->map[size] = NULL;
+// }
+
 
 void parse_map(t_map *map, int i)
 {
-	int j;
-	int size;
+    int j;
+    int size;
 
-	j = i;
-	size = 0;
+    j = i;
+    size = 0;
     // printf("here %s\n", data->map->map[0]);
-	int l = get_longest_line(map->line, i);
+    int l = get_longest_line(map->line, i);
     // int l = map->countlines_map;
     // printf("after %d\n", l);
     // exit(0);
     map->map_j = l;
-	while (map->line[j])
-	{
-		size++;
-		j++;
-	}
+    while (map->line[j])
+    {
+        size++;
+        j++;
+    }
     map->map_i = size;
-	// printf("size is is %d\n", size);
-	map->map = malloc(sizeof(char *) * (size + 1));
-	j = 0;
-	while (j < size)
-	{
-		map->map[j] = malloc(sizeof(char) * (l + 1));
-		j++;
-	}
-	j = 0;
-	l = 0;
-	while (map->line[i])
-	{
-		while (map->line[i][j] != '\0' && map->line[i][j] != '\n')
-		{
-			map->map[l][j] = map->line[i][j];
-			j++;
-		}
-		while (j < map->map_j)
-		{
-			map->map[l][j] = ' ';
-			j++;
-		}
-		map->map[l][j] = '\0';
-		// printf("j %d\n", j);
-		// printf("l is %d map is %s\n",l,  map->map[l]);
-		i++;
-		l++;
-		j = 0;
-	}
-	map->map[size] = NULL;
+    // printf("size is is %d\n", size);
+    map->map = malloc(sizeof(char *) * (size + 1));
+    j = 0;
+    while (j < size)
+    {
+        map->map[j] = malloc(sizeof(char) * (l + 1));
+        j++;
+    }
+    j = 0;
+    l = 0;
+    while (map->line[i])
+    {
+        ft_trim(map->line[i]);
+        while (map->line[i][j] != '\0' && map->line[i][j] != '\n')
+        {
+            map->map[l][j] = map->line[i][j];
+            j++;
+        }
+        while (j < map->map_j)
+        {
+            map->map[l][j] = ' ';
+            j++;
+        }
+        map->map[l][j] = '\0';
+        // printf("j %d\n", j);
+        // printf("l is %d map is %s\n",l,  map->map[l]);
+        i++;
+        l++;
+        j = 0;
+    }
+    map->map[size] = NULL;
 }
 
 int ft_find_map(t_map *map, int *i)
@@ -643,8 +750,8 @@ void check_first_last(t_map *map, int *i)
     {
        if(map->line[k][j] != '1' && map->line[k][j] != ' ' && map->line[k][j] != '\t')
        {
-            printf("Error \n invalid border \n ");
-            free_all(map);
+            printf("Error \n invalid border\n ");
+            freee(map);
             exit(0);
        }
        j++;
@@ -671,7 +778,7 @@ void check_map_borders(t_map *map, int *i)
         {
             printf("Error\n Invalid map !\n");
             printf(" -------->k == %d \n", k);
-            free_all(map);
+            freee(map);
             exit (0);
         }
         k++;
@@ -686,13 +793,13 @@ void ft_error(t_map *map)
     if(count == 0)
     {
         printf("error \n missing player !\n");
-        free_all(map);
+        freee(map);
         exit(0);
     }
     else if(count != 1)
     {
         printf("error \n more than one player found!\n");
-        free_all(map);
+        freee(map);
         exit(0);
     }
 }
@@ -720,7 +827,7 @@ void check_characters(t_map *map, int *i)
                 && map->line[k][j] != ' ' && map->line[k][j] != '\t')
             {
                 printf("Error\n Unknown character \n");
-                free_all(map);
+                freee(map);
                 exit(0);
             }
             j--;
@@ -760,7 +867,7 @@ void verify_space(t_map *map, int i, int j)
         || (map->map_copy[i][j - 1] == ' ' || map->map_copy[i][j - 1] == '\t'||  map->map_copy[i][j - 1] == '\n' ))
         {
             printf("Error\n '0' is surrounded by spaces at line %d, column %d\n", i, j);
-            free_all(map);
+            freee(map);
             exit(0); 
         }
     
@@ -814,7 +921,7 @@ void check_map(t_map *map)
     else
     {
 		printf("Map doesn't exist!\n");
-        free_all(map);
+        freee(map);
         exit(0);
     }
 }
@@ -897,8 +1004,8 @@ int povleft(t_data *data)
     float oldDirX;
     float oldPlaneX;
 
-    oldDirX = data->dirx;
-    oldPlaneX = data->planeX;
+    oldDirX = data->dirx ;
+    oldPlaneX = data->planeX ;
     data->dirx = data->dirx * cos(-0.1) - data->diry * sin(-0.1);
     data->diry = oldDirX * sin(-0.1) + data->diry * cos(-0.1);
     data->planeX = data->planeX * cos(-0.1) - data->planeY * sin(-0.1);
@@ -909,30 +1016,33 @@ int povleft(t_data *data)
     return 0;
 }
 
-void move_mini_player_front(t_data *data)
-{
-    if (data->compass == 'N')
-    {
-        if (data->map->map[data->player_i - 1][data->player_j] == '1')
-            return;
-        data->map->map[data->player_i - 1][data->player_j] = 'N';
-        data->map->map[data->player_i][data->player_j] = '0';
-        data->player_i--;
-    }
-}
+// void move_mini_player_front(t_data *data)
+// {
+//     // if (data->compass == 'N')
+//     // {
+//     //     if (data->map->map[data->player_i - 1][data->player_j] == '1')
+//     //         return;
+//     //     data->map->map[data->player_i - 1][data->player_j] = 'N';
+//     //     data->map->map[data->player_i][data->player_j] = '0';
+//     //     data->player_i--;
+//     // }
+// }
 
 int left(t_data *data)
 {
     float newposx;
     float newposy;
 
-    newposx = data->posx - data->diry * 0.3;
-    newposy = data->posy - data->dirx * 0.3;
+    printf("before moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
+    newposx = data->posx + data->planeX * 0.1;
+    newposy = data->posy + data->planeY * 0.1;
+    printf("after moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
+
     if (data->map->map[(int)newposy][(int)newposx] == '1')
         return 1;
     data->posx = newposx;
     data->posy = newposy;
-    move_mini_player_front(data);
+    // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -943,14 +1053,17 @@ int right(t_data *data)
 {
     float newposx;
     float newposy;
+    printf("before moved righ dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
 
-    newposx = data->posx + data->diry * 0.3;
-    newposy = data->posy + data->dirx * 0.3;
+    newposx = data->posx - data->planeX * 0.1;
+    newposy = data->posy - data->planeY * 0.1;
+    printf("after moved right dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
+
     if (data->map->map[(int)newposy][(int)newposx] == '1')
         return 1;
     data->posx = newposx;
     data->posy = newposy;
-    move_mini_player_front(data);
+    // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -968,7 +1081,7 @@ int front(t_data *data)
         return 1;
     data->posx = newposx;
     data->posy = newposy;
-    move_mini_player_front(data);
+    // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -991,6 +1104,36 @@ int back(t_data *data)
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
     return 0;   
 }
+
+// int ray2(int keycode ,t_data *data)
+// {
+//     // raycast(data);
+//     // (int)data;
+//     // printf("key is %d\n", keycode);
+//     // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
+//     // mlx_clear_window(data->mlx, data->mlx_win);
+// 	// if (keycode == 97)
+// 	// 	if(right(data) == 1)
+//     //         return 0;
+// 	// if (keycode == 100)
+// 	// 	if(left(data) == 1)
+//     //         return 0;
+//     // if (keycode == 119)
+// 	// 	if(front(data) == 1)
+//     //         return 0;
+// 	// if (keycode == 115)
+// 	// 	if (back(data) == 1)
+//     //         return 0;
+// 	if (keycode == 65361)
+// 		if (povleft(data) == 1)
+//             return 0;
+// 	if (keycode == 65363)
+// 		if (povright(data) == 1)
+//             return 0;
+// 	// if (keycode == 65307)
+// 	// 	exit(1);
+// 	return 0;
+// }
 
 int ray(int keycode ,t_data *data)
 {
@@ -1045,6 +1188,7 @@ void    create_window(t_data *data, t_map *map, t_wall *wall)
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     mlx_hook(data->mlx_win, 2, 1L<<0, &ray, data);
+    // mlx_hook(data->mlx_win, 2, 1L<<0, &ray2, data);
 	mlx_hook(data->mlx_win, 17, 0, (void *)delete_window, data);
 	mlx_loop(data->mlx);
 }

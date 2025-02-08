@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/01 19:02:51 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/05 19:01:12 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -110,9 +110,14 @@ typedef struct s_mini_map
 {
     int height;
     int width;
-    int start;
+    int x_start;
+    int y_start;
     int square_width;
     int square_height;
+    float mini_posx;
+    float mini_posy;
+    int area;
+
 }              t_mini_map;
 
 typedef struct s_data
@@ -147,7 +152,7 @@ typedef struct s_data
     t_mlx *img;
     t_mini_map *minimap;
 
-} t_data;
+}                  t_data;
 
 
 int	ft_strcmp(char *s1, char *s2);
@@ -193,6 +198,8 @@ void	*ft_memset(void *str, int c, size_t n);
 int count_comma(char *value);
 void parse_map(t_map *map, int i);
 int rgb_c(t_data *data);
+void free_map(t_map *map);
+
 
 void draw_fc(t_data *data, int x, double *y);
 

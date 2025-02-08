@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/02/01 22:03:19 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/05 16:20:41 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,7 +31,6 @@ void data_init(t_data *data)
         data->planeX = -0.66;
         data->planeY = 0;
 		//printf("compass is %c and dirx is %f diry is %f and planex %f, planey is %f\n", data->compass, data->dirx, data->diry, data->planeX, data->planeY);
-
     }
     else if (data->compass == 'E')
     {
@@ -40,7 +39,6 @@ void data_init(t_data *data)
         data->planeX = 0;
         data->planeY = 0.66;
 		//printf("compass is %c and dirx is %f diry is %f and planex %f, planey is %f\n", data->compass, data->dirx, data->diry, data->planeX, data->planeY);
-
     }
     else if (data->compass == 'W')
     {
@@ -49,7 +47,6 @@ void data_init(t_data *data)
         data->planeX = 0;
         data->planeY = -0.66;
 		//printf("compass is %c and dirx is %f diry is %f and planex %f, planey is %f\n", data->compass, data->dirx, data->diry, data->planeX, data->planeY);
-
     }
     else
         printf("errooorororororor\n");
@@ -264,15 +261,10 @@ void load_tex(t_data *data)
     {
         return;
     }
-    
-    
-        data->img->img_w = mlx_xpm_file_to_image(data->mlx, "./textures/tex4.xpm", &data->img->win_width, &data->img->win_height);
-   
-        data->img->img_e = mlx_xpm_file_to_image(data->mlx,"./textures/tex4.xpm", &data->img->win_width, &data->img->win_height);
-   
-        data->img->img_n = mlx_xpm_file_to_image(data->mlx, "./textures/tex4.xpm", &data->img->win_width, &data->img->win_height);
-   
-        data->img->img_s = mlx_xpm_file_to_image(data->mlx, "./textures/tex4.xpm", &data->img->win_width, &data->img->win_height);
+    data->img->img_w = mlx_xpm_file_to_image(data->mlx, data->map->we_texture, &data->img->win_width, &data->img->win_height);
+    data->img->img_e = mlx_xpm_file_to_image(data->mlx,data->map->ea_texture, &data->img->win_width, &data->img->win_height);
+    data->img->img_n = mlx_xpm_file_to_image(data->mlx, data->map->no_texture, &data->img->win_width, &data->img->win_height);
+    data->img->img_s = mlx_xpm_file_to_image(data->mlx, data->map->so_texture, &data->img->win_width, &data->img->win_height);
 }
 
 void init_img(t_data *data)
@@ -341,7 +333,6 @@ void draw_s(t_data *data, double x, double y, double tex_y)
     wall_x -= floor(wall_x); 
     tex_x = (int)(wall_x * (double)data->img->win_width);
 
-    
     if (data->side == 0 && data->raydirX > 0) 
         tex_x = data->img->win_width - tex_x - 1;
     if (data->side == 1 && data->raydirY < 0) 
@@ -486,14 +477,11 @@ void raycast(t_data *data)
             // draw_a_line(data, x);
             // draw_fc(data, x);
             render_wall(data, x);
-
-
         }
         data->hit = 0;
         x++;
     }
     draw_minimap(data, data->minimap);
-    
 }
 
 void player_init(t_data *data)

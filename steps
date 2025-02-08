@@ -1,5 +1,0 @@
-// Calculate ray direction
-// Determine map square and initialize distances
-// Perform DDA to find wall hit
-// Calculate perpendicular distance to wall
-// Determine line height and draw vertical stripe
