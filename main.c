@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/08 18:50:57 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/09 18:39:39 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -1033,15 +1033,17 @@ int left(t_data *data)
     float newposx;
     float newposy;
 
-    printf("before moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
+    // printf("before moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
     newposx = data->posx + data->planeX * 0.1;
     newposy = data->posy + data->planeY * 0.1;
-    printf("after moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
+    // printf("after moved left dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
 
     if (data->map->map[(int)newposy][(int)newposx] == '1')
         return 1;
     data->posx = newposx;
     data->posy = newposy;
+    data->minimap->mini_posx = (int)data->posx;
+    data->minimap->mini_posy = (int)data->posy;
     // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
@@ -1053,16 +1055,17 @@ int right(t_data *data)
 {
     float newposx;
     float newposy;
-    printf("before moved righ dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
-
+    // printf("before moved righ dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, data->posx, data->posy);
     newposx = data->posx - data->planeX * 0.1;
     newposy = data->posy - data->planeY * 0.1;
-    printf("after moved right dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
+    // printf("after moved right dir x %f, dir y %f, posx %f, posy %f\n", data->dirx, data->diry, newposx, newposy);
 
     if (data->map->map[(int)newposy][(int)newposx] == '1')
         return 1;
     data->posx = newposx;
     data->posy = newposy;
+    data->minimap->mini_posx = (int)data->posx;
+    data->minimap->mini_posy = (int)data->posy;
     // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
@@ -1081,10 +1084,12 @@ int front(t_data *data)
         return 1;
     data->posx = newposx;
     data->posy = newposy;
+    data->minimap->mini_posx = (int)data->posx;
+    data->minimap->mini_posy = (int)data->posy;
     // move_mini_player_front(data);
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
-    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
+    mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
     return 0;
 }
 
@@ -1099,6 +1104,8 @@ int back(t_data *data)
         return 1;
     data->posx = newposx;
     data->posy = newposy;
+    data->minimap->mini_posx = (int)data->posx;
+    data->minimap->mini_posy = (int)data->posy;
     raycast(data);
     mlx_clear_window(data->mlx, data->mlx_win);
     mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0); 
@@ -1161,14 +1168,14 @@ int ray(int keycode ,t_data *data)
 		if (povright(data) == 1)
             return 0;
 	if (keycode == 65307)
-		exit(1);
+		exit(0);
 	return 0;
 }
 
 int delete_window(t_data *data)
 {
     mlx_destroy_window(data->mlx, data->mlx_win);
-	exit(1);
+	exit(0);
 }
 
 void    create_window(t_data *data, t_map *map, t_wall *wall)

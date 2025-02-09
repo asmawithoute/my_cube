@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/02/05 16:20:41 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/09 15:01:58 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -502,8 +502,11 @@ void player_init(t_data *data)
                 data->player_i = i;
                 data->player_j = j;
                 data->posx = ((float)j) + 0.5;
+                // data->minimap->mini_posx = &data->posx;
 				//printf("posx is %f\n", data->posx);
                 data->posy = ((float)i) + 0.5;
+                // data->minimap->mini_posy = &data->posy;
+
 
             }
             j++;

@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/05 19:01:12 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/09 16:57:54 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -114,9 +114,12 @@ typedef struct s_mini_map
     int y_start;
     int square_width;
     int square_height;
-    float mini_posx;
-    float mini_posy;
+    int mini_posx;
+    int mini_posy;
+    float diffx;
+    float diffy;
     int area;
+    int flag;
 
 }              t_mini_map;
 
