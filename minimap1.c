@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2025/01/23 13:50:58 by akoraich          #+#    #+#             */
-/*   Updated: 2025/02/09 18:46:10 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/09 20:51:32 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -19,7 +19,7 @@ void draw_square(t_data *data, int mapx, int mapy, int x, int y)
     int color;
     // printf("mapx %d mapy %d \n", mapx, mapy);
     //      printf("posx %f, pos y %f\nmpox %d, mpo y %d \n ", data->posx, data->posy, data->minimap->mini_posx, data->minimap->mini_posy);
-    if (data->map->map[mapx][mapy] == '1')
+    if (data->map->map[mapx][mapy] == '1' || data->map->map[mapx][mapy] == ' ')
         color = 0x00214780;
     else if (mapy == data->minimap->mini_posx && mapx == data->minimap->mini_posy)
         color = 0x00fc0317;
