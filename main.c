@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/11 16:23:28 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/11 20:42:28 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,7 +18,7 @@ Uint8 *wavBuffer;
 
 SDL_AudioDeviceID deviceId;
 Uint32 lastPlayTime = 0;
-const Uint32 playDelay = 350;
+const Uint32 playDelay = 700;
 
 void	file_err(int i)
 {
@@ -1260,7 +1260,7 @@ void	create_window(t_data *data, t_map *map, t_wall *wall)
 	data_init(data);
 	mini_map(data);
 	sfx();
-	load_wav("step.wav");
+	load_wav("steps2.wav");
 	open_audio_device();
 	raycast(data);
 	mlx_clear_window(data->mlx, data->mlx_win);

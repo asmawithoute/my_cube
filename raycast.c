@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/20 14:44:11 by akoraich          #+#    #+#             */
-/*   Updated: 2025/02/09 15:01:58 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/11 21:29:11 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -190,35 +190,16 @@ void dda(t_data *data)
 void calc_length(t_data *data)
 {
     if (data->side == 0)
-    {
         data->prepwalldist = data->sidedistX - data->deltadisX;
-        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistX, data->deltadisX);
-    }
     else
-    {
         data->prepwalldist = data->sidedistY - data->deltadisY;
-        //printf("prepwalldist is %f sidedistx is %f deltadist is %f\n", data->prepwalldist, data->sidedistY, data->deltadisY);
-    }
-    //if ((int)data->prepwalldist != 0)
-    //if ((int)data->prepwalldist == 0)
-    //{
-    //    printf("errooooooor\n");
-    //    return;    
-    // }
     if (data->prepwalldist == 0)
-    {
-        // printf("og prep is %f\n", data->prepwalldist);
         data->wall->line_length = ((float)screenHeight / 0.1);
-    }
     else
         data->wall->line_length = ((float)screenHeight / (data->prepwalldist));
-	// else
-	// 	data->wall->line_length = screenHeight;
     data->wall->draw_start = ((-data->wall->line_length) / 2) + ((float)screenHeight / 2);
     if(data->wall->draw_start < 0)
         data->wall->draw_start = 0;
-    // printf("line_length -> %d, perp %f\n", data->wall->line_length, data->prepwalldist);
-    // exit(1);
     data->wall->draw_end = ((data->wall->line_length) / 2) + ((float)screenHeight / 2);
     if (data->wall->draw_end > (float)screenHeight)
         data->wall->draw_end = (float)screenHeight - 1;
