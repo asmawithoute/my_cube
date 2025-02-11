@@ -6,7 +6,7 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 15:08:06 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/09 16:57:54 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/11 15:00:01 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,6 +21,9 @@
 # include <unistd.h>
 # include <mlx.h>
 #include <math.h>
+#include <SDL2/SDL.h>
+// #include <SDL2/SDL_mixer.h>
+
 
 #define screenWidth 955
 #define screenHeight 655

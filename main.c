@@ -6,11 +6,19 @@
 /*   By: akoraich <akoraich@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2024/12/07 14:20:48 by meabdelk          #+#    #+#             */
-/*   Updated: 2025/02/10 17:16:34 by akoraich         ###   ########.fr       */
+/*   Updated: 2025/02/11 16:23:28 by akoraich         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "cub3d.h"
+
+SDL_AudioSpec wavSpec;
+Uint32 wavLength;
+Uint8 *wavBuffer;
+
+SDL_AudioDeviceID deviceId;
+Uint32 lastPlayTime = 0;
+const Uint32 playDelay = 350;
 
 void	file_err(int i)
 {
@@ -1049,6 +1057,12 @@ int	left(t_data *data)
 
 	// printf("before moved left dir x %f, dir y %f, posx %f, posy %f\n",
 		// data->dirx, data->diry, data->posx, data->posy);
+	Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastPlayTime >= playDelay) {
+        SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+        SDL_PauseAudioDevice(deviceId, 0);
+        lastPlayTime = currentTime;
+    }
 	newposx = data->posx + data->planeX * 0.1;
 	newposy = data->posy + data->planeY * 0.1;
 	// printf("after moved left dir x %f, dir y %f, posx %f, posy %f\n",
@@ -1075,6 +1089,12 @@ int	right(t_data *data)
 
 	// printf("before moved righ dir x %f, dir y %f, posx %f, posy %f\n",
 		// data->dirx, data->diry, data->posx, data->posy);
+		Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastPlayTime >= playDelay) {
+        SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+        SDL_PauseAudioDevice(deviceId, 0);
+        lastPlayTime = currentTime;
+    }
 	newposx = data->posx - data->planeX * 0.1;
 	newposy = data->posy - data->planeY * 0.1;
 	// printf("after moved right dir x %f, dir y %f, posx %f, posy %f\n",
@@ -1091,11 +1111,23 @@ int	right(t_data *data)
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
 	return (0);
 }
+int stop_audio() {
+    SDL_ClearQueuedAudio(deviceId);
+    SDL_PauseAudioDevice(deviceId, 1);
+	return 0;
+}
 
 int	front(t_data *data)
 {
 	float	newposx;
 	float	newposy;
+
+	Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastPlayTime >= playDelay) {
+        SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+        SDL_PauseAudioDevice(deviceId, 0);
+        lastPlayTime = currentTime;
+    }
 
 	newposx = data->posx + data->dirx * 0.1;
 	newposy = data->posy + data->diry * 0.1;
@@ -1109,6 +1141,9 @@ int	front(t_data *data)
 	raycast(data);
 	mlx_clear_window(data->mlx, data->mlx_win);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
+	
+	// stop_audio();
+	
 	return (0);
 }
 
@@ -1117,6 +1152,12 @@ int	back(t_data *data)
 	float	newposx;
 	float	newposy;
 
+	Uint32 currentTime = SDL_GetTicks();
+    if (currentTime - lastPlayTime >= playDelay) {
+        SDL_QueueAudio(deviceId, wavBuffer, wavLength);
+        SDL_PauseAudioDevice(deviceId, 0);
+        lastPlayTime = currentTime;
+    }
 	newposx = data->posx - data->dirx * 0.1;
 	newposy = data->posy - data->diry * 0.1;
 	if (data->map->map[(int)newposy][(int)data->posx] != '1')
@@ -1131,37 +1172,6 @@ int	back(t_data *data)
 	return (0);
 }
 
-// int ray2(int keycode ,t_data *data)
-// {
-//     // raycast(data);
-//     // (int)data;
-//     // printf("key is %d\n", keycode);
-//     // mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0,
-	// 0);
-//     // mlx_clear_window(data->mlx, data->mlx_win);
-// 	// if (keycode == 97)
-// 	// 	if(right(data) == 1)
-//     //         return (0);
-// 	// if (keycode == 100)
-// 	// 	if(left(data) == 1)
-//     //         return (0);
-//     // if (keycode == 119)
-// 	// 	if(front(data) == 1)
-//     //         return (0);
-// 	// if (keycode == 115)
-// 	// 	if (back(data) == 1)
-//     //         return (0);
-// 	if (keycode == 65361)
-// 		if (povleft(data) == 1)
-//             return 0;
-// 	if (keycode == 65363)
-// 		if (povright(data) == 1)
-//             return 0;
-// 	// if (keycode == 65307)
-// 	// 	exit(1);
-// 	return 0;
-// }
-
 int	ray(int keycode, t_data *data)
 {
 	// raycast(data);
@@ -1169,6 +1179,7 @@ int	ray(int keycode, t_data *data)
 	// printf("key is %d\n", keycode);
 	// mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
 	// mlx_clear_window(data->mlx, data->mlx_win);
+	
 	if (keycode == 97)
 		if (right(data) == 1)
 			return 0;
@@ -1176,8 +1187,11 @@ int	ray(int keycode, t_data *data)
 		if (left(data) == 1)
 			return 0;
 	if (keycode == 119)
+	{
 		if (front(data) == 1)
 			return 0;
+    	// SDL_PauseAudioDevice(deviceId, 1);
+	}
 	if (keycode == 115)
 		if (back(data) == 1)
 			return 0;
@@ -1198,6 +1212,39 @@ int	delete_window(t_data *data)
 	exit(0);
 }
 
+int open_audio_device() {
+    deviceId = SDL_OpenAudioDevice(NULL, 0, &wavSpec, NULL, 0);
+    if (deviceId == 0) {
+        printf("Failed to open audio device! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
+    return 0;
+}
+
+void close_audio() {
+    SDL_Quit();
+}
+
+void close_audio_device() {
+    SDL_CloseAudioDevice(deviceId);
+}
+
+int load_wav(const char *file) {
+    if (SDL_LoadWAV(file, &wavSpec, &wavBuffer, &wavLength) == NULL) {
+        printf("Failed to load WAV file! SDL_Error: %s\n", SDL_GetError());
+        return -1;
+    }
+    return 0;
+}
+
+
+void sfx()
+{
+	SDL_Init(SDL_INIT_AUDIO);
+	// Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048);
+	// data->gMoveSound = Mix_LoadWAV("sfx.wav");
+}
+
 void	create_window(t_data *data, t_map *map, t_wall *wall)
 {
 	// void	*mlx;
@@ -1212,10 +1259,14 @@ void	create_window(t_data *data, t_map *map, t_wall *wall)
 	player_init(data);
 	data_init(data);
 	mini_map(data);
+	sfx();
+	load_wav("step.wav");
+	open_audio_device();
 	raycast(data);
 	mlx_clear_window(data->mlx, data->mlx_win);
 	mlx_put_image_to_window(data->mlx, data->mlx_win, data->img->img, 0, 0);
 	mlx_hook(data->mlx_win, 2, 1L << 0, &ray, data);
+	// mlx_hook(data->mlx_win, 3, 1L << 1, &stop_audio, data);
 	// mlx_hook(data->mlx_win, 2, 1L<<0, &ray2, data);
 	mlx_hook(data->mlx_win, 17, 0, (void *)delete_window, data);
 	mlx_loop(data->mlx);
@@ -1242,5 +1293,7 @@ int	main(int ac, char **av)
 	check_map(map);
 	create_window(data, map, &wall);
 	free_all(map);
+    close_audio_device();
+    close_audio();
 	return (0);
 }

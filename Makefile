@@ -1,11 +1,11 @@
 NAME = cub3D
 CC = cc
-CFLAGS = -g3 -Wall -Werror -Wextra -Imlx_linux #-fsanitize=address
+CFLAGS = -g3 -Wall -Werror -Wextra -Imlx_linux -I/usr/include/SDL2#-fsanitize=address
 src = ft_split.c minimap1.c raycast.c main.c utils.c free.c ./get_next_line/get_next_line.c ./get_next_line/get_next_line_utils.c
 
 OBJ = $(src:.c=.o)
 
-LDFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz
+LDFLAGS = -Lmlx_linux -lmlx_Linux -L/usr/lib -Imlx_linux -lXext -lX11 -lm -lz -lSDL2
 
 RED = "\033[0;31m"
 GREEN0 = "\033[32m"
